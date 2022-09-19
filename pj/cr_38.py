@@ -57,10 +57,10 @@ def make_df(start, end):
     dates = []
     contents = []
 
-    def make_raw_data(num):
-        url = 'https://www.38.co.kr/html/forum/board/?o=v&code=389930&no=' + str(num)
+    def make_raw_data(num):  # 종목코드에 따라 함수 돌리게 바꾸기.
+        url = 'https://www.38.co.kr/html/forum/board/?o=v&code=279570&no=' + str(num)
         response = requests.get(url)
-        error_check = BeautifulSoup(response.text, 'html.parser')
+        error_check = BeautifulSoup(response.text, 'html.parser').select('script')
         if '해당글의 내용이 삭제되었습니다.' in str(error_check):  # 삭제된 글 조건문으로 확인
             return
         else:
@@ -83,5 +83,12 @@ def make_df(start, end):
     # return pd.DataFrame(raw_dict)
 
 
-# df = pd.DataFrame(make_df(793, 1211))  # dataframe으로 변환
-# df.to_csv('793~1210.csv')  # 파일명 지정해서 csv로 저장
+df = pd.DataFrame(make_df(1, 192))  # dataframe으로 변환
+df.to_csv('38케이뱅크_1~191.csv')  # 파일명 지정해서 csv로 저장
+
+
+# temp = requests.get('https://www.38.co.kr/html/forum/board/?o=v&code=279570&no=200')
+# temp_par = BeautifulSoup(temp.text, 'html.parser')
+# test = str(temp_par.select('script'))
+# if '해당글의' in test:
+#     print(1)
