@@ -57,8 +57,13 @@ def make_df(start, end):
     dates = []
     contents = []
 
+<<<<<<< HEAD
     def make_raw_data(num):  # 종목코드에 따라 함수 돌리게 바꾸기.
         url = 'https://www.38.co.kr/html/forum/board/?o=v&code=279570&no=' + str(num)
+=======
+    def make_raw_data(num):
+        url = 'http://forum.38.co.kr/html/forum/board/?o=v&code=279570&no=' + str(num)
+>>>>>>> d614b57 (temp)
         response = requests.get(url)
         error_check = BeautifulSoup(response.text, 'html.parser').select('script')
         if '해당글의 내용이 삭제되었습니다.' in str(error_check):  # 삭제된 글 조건문으로 확인
@@ -83,6 +88,7 @@ def make_df(start, end):
     # return pd.DataFrame(raw_dict)
 
 
+<<<<<<< HEAD
 df = pd.DataFrame(make_df(1, 192))  # dataframe으로 변환
 df.to_csv('38케이뱅크_1~191.csv')  # 파일명 지정해서 csv로 저장
 
@@ -92,3 +98,16 @@ df.to_csv('38케이뱅크_1~191.csv')  # 파일명 지정해서 csv로 저장
 # test = str(temp_par.select('script'))
 # if '해당글의' in test:
 #     print(1)
+=======
+# df = pd.DataFrame(make_df(1, 10))  # dataframe으로 변환
+# df.to_csv('38케이뱅크 2~191.csv')  # 파일명 지정해서 csv로 저장
+
+temp = requests.get('http://forum.38.co.kr/html/forum/board/?o=v&code=279570&no=5')
+print(temp)
+print(BeautifulSoup(temp.text, 'html.parser'))
+# temp_par = BeautifulSoup(temp.text, 'html.parser')
+# if 'alert' in str(temp_par):
+#     print('Error')
+
+## 케이뱅크 alert메세지 이상함...
+>>>>>>> d614b57 (temp)
