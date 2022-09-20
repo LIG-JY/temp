@@ -4,5 +4,5 @@ import cr_38 as cr
 # 종목코드 : 204610
 # 게시글 number: 1~31
 
-hob_df = cr.make_df(1, 31, '204610')  # startpagenum, endpagenum, 종목코드
+hob_df = cr.make_df(1, 32, '204610')  # startpagenum, endpagenum, 종목코드
 hob_df.to_csv('38티쓰리엔터테인먼트.csv')
