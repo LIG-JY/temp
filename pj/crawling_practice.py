@@ -111,13 +111,14 @@ def make_df(start, end):
     # return pd.DataFrame(raw_dict)
 
 
-example_df = pd.DataFrame(make_df(793, 1211))
-example_df.to_csv('793~1210.csv')
+# example_df = pd.DataFrame(make_df(793, 1211))
+# example_df.to_csv('793~1210.csv')
 
-# temp = requests.get('https://www.38.co.kr/html/forum/board/?o=v&code=389930&no=1150')
-# print(temp)
-# print(BeautifulSoup(temp.text, 'html.parser'))
-# temp_par = BeautifulSoup(temp.text, 'html.parser')
-# if 'alert' in str(temp_par):
-#     print('Error')
+temp = requests.get('https://www.38.co.kr/html/forum/board/?o=v&table=CI64400&code=064400&no=56455')
+print(temp)
+print(BeautifulSoup(temp.text, 'html.parser'))
+
+temp_par = BeautifulSoup(temp.text, 'html.parser')
+if '해당글' in str(temp_par):
+    print('Error')
 
