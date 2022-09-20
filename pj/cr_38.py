@@ -22,7 +22,10 @@ from bs4 import BeautifulSoup
 # 본문 추출 함수
 def contents_extract(responseobj):
     contents_ = BeautifulSoup(responseobj.text, 'html.parser')
+    error_check = BeautifulSoup(responseobj.text, 'html.parser').select('script') # 본문 추출 함수에서 script alarm이 나오는 경우 메세지 확인
     selected = contents_.select('.readtext')
+    if selected is None:
+        print(str(error_check))
     readable_contents = BeautifulSoup(str(selected), 'html.parser')
     ans = str(readable_contents.get_text())
     return ans[1:-1]
@@ -51,63 +54,38 @@ def date_extract(responseobj):
 import pandas as pd
 
 
-def make_df(start, end):
+def make_df(start, end, code):
     links = []
     titles = []
     dates = []
     contents = []
-
-<<<<<<< HEAD
-    def make_raw_data(num):  # 종목코드에 따라 함수 돌리게 바꾸기.
-        url = 'https://www.38.co.kr/html/forum/board/?o=v&code=279570&no=' + str(num)
-=======
-    def make_raw_data(num):
-        url = 'http://forum.38.co.kr/html/forum/board/?o=v&code=279570&no=' + str(num)
->>>>>>> d614b57 (temp)
+    def make_raw_data(num, code): # code -> str
+        url = 'https://www.38.co.kr/html/forum/board/?o=v&code='+code+'&no=' + str(num)
         response = requests.get(url)
         error_check = BeautifulSoup(response.text, 'html.parser').select('script')
-        if '해당글의 내용이 삭제되었습니다.' in str(error_check):  # 삭제된 글 조건문으로 확인
+        if '해당글' in str(error_check):  # 삭제된 글 조건문으로 확인
             return
+        if "이 글은 글쓴이가 회원만 볼 수 있는 권한을 설정했습니다." in str(error_check):
+            return
+        # if '해당글의 내용이 삭제되었습니다.' in str(error_check):  # 삭제된 글 조건문으로 확인
+        #     return
+        # elif "해당글은 삭제 되었거나 존재하지 않는 글입니다." in str(error_check):
+        #     return
         else:
-            links.append(url)
             title = title_extract(response)
             titles.append(title)
+            links.append(url)
             date = date_extract(response)
             dates.append(date)
             content = contents_extract(response)
             contents.append(content)
         return
     for post_num in range(start, end):
-        make_raw_data(post_num)
+        make_raw_data(post_num, code)
     raw_dict = dict()
     raw_dict['titles'] = titles
     raw_dict['links'] = links
     raw_dict['dates'] = dates
     raw_dict['contents'] = contents
-    return raw_dict
-    # return pd.DataFrame(raw_dict)
-
-
-<<<<<<< HEAD
-df = pd.DataFrame(make_df(1, 192))  # dataframe으로 변환
-df.to_csv('38케이뱅크_1~191.csv')  # 파일명 지정해서 csv로 저장
-
-
-# temp = requests.get('https://www.38.co.kr/html/forum/board/?o=v&code=279570&no=200')
-# temp_par = BeautifulSoup(temp.text, 'html.parser')
-# test = str(temp_par.select('script'))
-# if '해당글의' in test:
-#     print(1)
-=======
-# df = pd.DataFrame(make_df(1, 10))  # dataframe으로 변환
-# df.to_csv('38케이뱅크 2~191.csv')  # 파일명 지정해서 csv로 저장
-
-temp = requests.get('http://forum.38.co.kr/html/forum/board/?o=v&code=279570&no=5')
-print(temp)
-print(BeautifulSoup(temp.text, 'html.parser'))
-# temp_par = BeautifulSoup(temp.text, 'html.parser')
-# if 'alert' in str(temp_par):
-#     print('Error')
-
-## 케이뱅크 alert메세지 이상함...
->>>>>>> d614b57 (temp)
+    # return raw_dict
+    return pd.DataFrame(raw_dict)
